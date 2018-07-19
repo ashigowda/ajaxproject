@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Update Post</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="nav"></div>
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link " href="usersList.html">User Details</a></li>
+                <li class="nav-item"><a class="nav-link " href="userListPost.html">Posts</a></li>
+                <li class="nav-item"><a class="nav-link active" href="userAlbum.html">Albums</a></li>
+                <li class="nav-item"><a class="nav-link " href="todos.html">Todos</a></li>
+            </ul>
+        </div>
+        <h1 align="center">Update Album</h1>
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="user Id">User Id</label>
+                    <input type="text" class="form-control" id="uId" placeholder="id" name="userId">
+                </div>
+            </div>
+             <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="is">Id</label>
+                    <input type="text" class="form-control" id="id1" placeholder="id" name="id">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="name">Title</label>
+                    <input type="text" class="form-control" id="title" placeholder="title" name="title">
+                </div>
+                 <div class="row">
+                <div class="form-group" style="margin-left:9cm;padding:10px">
+                    <button type="button" value="submit" class="btn btn-info btn-update">Submit</button>
+                    <button type="button" class="btn btn-info" onclick="window.location.href='/user/userPost.html'">Back</button>
+                </div>
+            </div>
+            
+            </div>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+                crossorigin="anonymous"></script>
+            <script src="/js/ajaxLibrary.js"></script>
+            <script src="/js/dataAccess.js"></script>
+            <script src="/js/utilLibrary.js"></script>
+            <script src="/js/serviceLayer.js"></script>
+            <script src="/js/test.js"></script>
+            <script>
+                $(document).ready(function () {
+                    var service = new serviceLayer();
+                    var pageNumber = service.utils.urlParam("pageNumber");
+                    pageNumber = pageNumber ? pageNumber : 1;
+                    var id = service.utils.urlParam("id");
+                    id = id ? id : 1;
+                    pageInput = {
+                        pageName: "users"
+                    }
+                    service.utils.generatePage(pageInput, function (err, page) {
+                        $("#nav").html(page);
+                    })
+
+                    $(".btn-update").click(function (event) {
+                        var updateData = {
+                            userId:$("uId").val(),
+                            id: $("#id1").val(),
+                            title: $("#title").val(),
+                        }
+                         service.dataAccess.updateAlbumByUser(id, updateData, function (err, result) {
+                             alert(JSON.stringify(updateData))
+                            $(window).attr('location', '/user/userAlbum.html?&pageNumber=' + pageNumber);
+                        })
+                    })
+                          service.dataAccess.getAlbumByUser(id, function (err, user) {
+                         $("#uId").val(user.data[0].userId);
+                        $("#id1").val(user.data[0].id);
+                        $("#title").val(user.data[0].title);
+                    })
+
+                })
+            </script>
+</body>
+
+</html>

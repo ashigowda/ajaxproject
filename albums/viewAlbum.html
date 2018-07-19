@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ViewAlbum</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="nav"></div>
+        <div id="album"  style="margin-left:0.5cm"></div>
+        <h3>Photos</h3>
+        <div id="photo"  style="margin-left:0.5cm"> </div>
+        <div id="page"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <script src="/js/ajaxLibrary.js"></script>
+    <script src="/js/dataAccess.js"></script>
+    <script src="/js/utilLibrary.js"></script>
+    <script src="/js/serviceLayer.js"></script>
+    <script>
+        $(document).ready(function () {
+            //album template
+            var template = `<div>
+                    <div class="row" style="font-weight:bold"><%= title %></div>
+                    <div><hr>`;
+            var compiledTemplate = _.template(template);
+            //photo template
+            var pTemplate = `<div>
+                            <div class="row" ><%= title %></div>
+                            <div class="row" style="margin-top:10px"><img src=<%= thumbnailUrl %></div>
+                            </div><hr>`
+            var pCompiledTemplate = _.template(pTemplate);
+            var service = new serviceLayer();
+            var pageInput = {
+                pageName: "albums"
+            }
+
+            var pageNumber = service.utils.urlParam("pageNumber");
+            pageNumber = pageNumber ? pageNumber : 1;
+            var id = service.utils.urlParam("id");
+            var pageLimit = 10;
+            id = id ? id : 1;
+            service.dataAccess.getAlbum(id, function (err, result) {
+                if (err = " ") {
+                     pageInput["breadcrumbTitle"] = result.data.title;
+                    service.utils.generatePage(pageInput, function (err, page) {
+                        $("#nav").html(page);
+                    });
+                    var list = "";
+                    list = compiledTemplate(result.data);
+                    $("#album").html(list);
+                }
+            })
+            service.dataAccess.getPhotosByAlbum(id, pageNumber, pageLimit, function (err, result) {
+                if (err = " ") {
+                    var list = '';
+                    $.each(result.data, function (index, record) {
+                        list += pCompiledTemplate(record);
+                    })
+                    $("#photo").html(list);
+                }
+                var pagination = service.utils.generatePagination("/albums/viewAlbum.html?", result.totalRecords, pageNumber, pageLimit);
+                $("#page").html(pagination.content);
+            })
+        })
+    </script>
+</body>
+
+</html>

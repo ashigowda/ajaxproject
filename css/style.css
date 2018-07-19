@@ -1,0 +1,17 @@
+body {
+  /*padding-top: 20px;*/
+  padding-bottom: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.center {
+ justify-content: center;
+}
+
+#name,#email,#uname,#city,#phone,#zipCode,#cName,#street {
+  border : none;
+}
+ 

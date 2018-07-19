@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TodoPage</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="nav"></div>
+    </div>
+
+    <div class="container">
+        <a class="btn btn-info btn-create" role="botton" href="/user/createTodo.html">Create</a>
+        <div class="table table-striped table-hover table-users">
+            <table class="table" id="MyTable">
+                <thead>
+                    <tr>
+                        <th id="id">id</th>
+                        <th id="name">Name</th>
+                        <th>status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div>
+        <div id="page"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script src="/js/ajaxLibrary.js"></script>
+    <script src="/js/dataAccess.js"></script>
+    <script src="/js/utilLibrary.js"></script>
+    <script src="/js/serviceLayer.js"></script>
+    <script src="/js/test.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            var template = `<tr>
+       <td><%= id %></td>
+       <td><%= title %></td>   
+         <td data-title="status" class="ok" id="a"><span class="badge badge-success" style="color:blueviolet;"><%= completed %></span><br></td>
+       <td>
+        <button type="button" class="btn btn-info viewBtn" data-key="<%= id %>">View</button> 
+       <button type="button" class="btn btn-success doneBtn" data-key="<%= id %>">Done</button> 
+        <button type="button" class="btn btn-success undoneBtn" data-key="<%= id %>">UnDone</button> 
+       <button type="button" data-key="<%= id %>" class="btn btn-danger deleteBtn">Delete</button>
+       </td>
+       </tr>`;
+            var compiledTemplate = _.template(template);
+            var service = new serviceLayer();
+            var pageNumber = service.utils.urlParam("pageNumber");
+            pageNumber = pageNumber ? pageNumber : 1;
+            var id = service.utils.urlParam("id");
+            id = id ? id : 1;
+            //var pageNumber = 1;
+            var pageLimit = 10
+            pageInput = {
+                pageName: "users"
+            }
+            service.utils.generatePage(pageInput, function (err, page) {
+                $("#nav").html(page);
+            })
+            service.dataAccess.getTodosByUser(pageNumber, pageLimit, function (err, result) {
+                if (err = ' ') {
+                    var list = " ";
+                    $.each(result.data, function (index, record) {
+
+                        list += compiledTemplate(record);
+                    })
+                    $("#tbody").html(list);
+                }
+                var pagination = service.utils.generatePagination("/user/todos.html?", result.totalRecords, pageNumber, pageLimit);
+                $("#page").html(pagination.content);
+            })
+
+            $(".viewBtn").click(function (event) {
+                event.preventDefault();
+                var key = $(this).attr("data-key");
+                $(window).attr('location', '/user/userViewPage.html?id=' + key);
+            })
+            
+            $(".viewBtn").click(function (event) {
+                event.preventDefault();
+                var key = $(this).attr("data-key");
+                $(window).attr('location', '/user/userViewPage.html?id=' + key);
+            })
+            $(".deleteBtn").click(function (event) {
+                event.preventDefault();
+                var strconfirm = confirm("Are you sure you want to delete?");
+                if (strconfirm == true) {
+                    var key = $(this).attr("data-key");
+                    service.dataAccess.deleteUser(key, function (err, result) {
+                        $(window).attr('location', '/user/usersList.html?id=' + key + '&pageNumber=' + pageNumber);
+                    })
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

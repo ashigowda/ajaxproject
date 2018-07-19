@@ -1,0 +1,13 @@
+<ol class="breadcrumb">
+    <% for(var i =0; i < selectedBc.length; i++) { %>
+        <li class="breadcrumb-item <%= (i == (selectedBc.length-1)) ? " active " : " " %> ">
+            <% if(i < (selectedBc.length-1)) { %>
+                <a href="<%= selectedBc[i].href %>">
+                    <%= selectedBc[i].title %>
+                </a>
+                <% } else { %>
+                    <%= selectedBc[i].title %>
+                <% } %>
+        </li>
+        <% } %>
+</ol>

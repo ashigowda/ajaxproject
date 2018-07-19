@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Posts</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="nav"></div>
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link " href="/user/usersList.html">User Details</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/user/userPost.html">Posts</a></li>
+                <li class="nav-item"><a class="nav-link " href="/user/userAlbum.html">Albums</a></li>
+                <li class="nav-item"><a class="nav-link " href="todos.html">Todos</a></li>
+            </ul>
+        </div>
+        <h3 align="center">Albums List</h3>
+        <a class="btn btn-info btn-create" role="botton" href="/user/createAlbum.html">Create</a>
+        <div id="post" style="margin-left:0.3cm"></div>
+
+        <div id="page"></div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+    <script src="/js/ajaxLibrary.js"></script>
+    <script src="/js/dataAccess.js"></script>
+    <script src="/js/utilLibrary.js"></script>
+    <script src="/js/serviceLayer.js"></script>
+    <script src="/js/test.js"></script>
+    <script>
+        $(document).ready(function () {
+            var template = `<div>
+             
+                        <div class="row" style="font-weight:bold;margin-top:25px"> <%= id %></div>
+                       <div class="row" style="font-weight:bold"><p> <%= title ? title : "" %> </p></div></div>
+                         <button type="button"  class="btn btn-primary btnDelete" style="float:right;margin-left:2px" data-key="<%= id %>">Delete</button></div>
+                            <button type="button"  class="btn btn-info btnUpdate" style="float:right;margin-left:2px" data-key="<%= id %>">Update</button></div>
+                           <button type="button"  class="btn btn-success btnView" style="float:right;margin-left:2px" data-key="<%= id %>">View</button></div>
+                      <i class="fa fa-3x fa-photo" style="color: skyblue;margin-left:1cm"></i><%= photos.length %><hr>`;
+            var compiledTemplate = _.template(template);
+
+            var service = new serviceLayer();
+            var pageNumber = service.utils.urlParam("pageNumber");
+            pageNumber = pageNumber ? pageNumber : 1;
+             var recordsPerPage = 10;
+            var pageInput = {
+                pageName: "albums"
+            }
+            service.utils.generatePage(pageInput, function (err, page) {
+
+                $("#nav").html(page);
+            });
+            service.dataAccess.getAlbumsByUser(pageNumber, recordsPerPage, function (err, result) {
+                if (err = " ") {
+                    var list = "";
+                    $.each(result.data, function (index, record) {
+                        console.log(record)
+                        record["title"] = record["title"] ? record["title"] : "no title";
+                        list += compiledTemplate(record);
+                    })
+
+                    $("#post").html(list)
+                }
+                var pagination = service.utils.generatePagination("/user/userAlbum.html?", result.totalRecords, pageNumber, recordsPerPage);
+                $("#page").html(pagination.content);
+
+                $(".btnView").click(function (event) {
+                    event.preventDefault();
+                    var key = $(this).attr("data-key");
+                    $(window).attr('location', '/user/userViewAlbum.html?id=' + key);
+                })
+                $(".btnUpdate").click(function (event) {
+                event.preventDefault();
+                var key = $(this).attr("data-key");
+                $(window).attr('location', '/user/updateAlbum.html?id=' + key + '&pageNumber=' + pageNumber);
+            })
+            $(".btnDelete").click(function (event) {
+                event.preventDefault();
+                var strconfirm = confirm("Are you sure you want to delete?");
+                if (strconfirm == true) {
+                    var key = $(this).attr("data-key");
+                    service.dataAccess.deleteAlbumByUser(key, function (err, result) {
+                        $(window).attr('location', '/user/userAlbum.html?id=' + key + "&pageNumber=" + pageNumber);
+                    })
+                }
+            })
+            })
+        });
+    </script>
+</body>
+
+</html>

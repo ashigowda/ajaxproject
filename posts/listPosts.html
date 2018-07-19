@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Posts</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+            crossorigin="anonymous">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+      <div class="container">
+            <div id="nav"></div>
+            <h3 align="center">Posts List</h3>
+            <div id="post" style="margin-left:0.3cm"></div>
+            <div id="page"></div>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+            crossorigin="anonymous"></script>
+      <script src="/js/ajaxLibrary.js"></script>
+      <script src="/js/dataAccess.js"></script>
+      <script src="/js/utilLibrary.js"></script>
+      <script src="/js/serviceLayer.js"></script>
+      <script src="/js/test.js"></script>
+            <script>
+                  $(document).ready(function () {
+                        var template = `<div>
+                        <div class="row" style="font-weight:bold;margin-top:25px"> <%= id %></div>
+                       <div class="row" style="font-weight:bold"><p> <%= title %> </p></div><div class="row"><p>  <%= body %> </p></div>
+                       <button type="button"  class="btn btn-success btnView" style="float:right" data-key="<%= id %>">View</button></div>
+                        <i class="fa fa-3x fa-comments" style="color: skyblue;margin-left:1cm"></i><%= comments.length %><hr>`;
+                        var compiledTemplate = _.template(template);
+                        var noOfRecords = 10;
+                        var recordsPerPage = 10;
+                        var service = new serviceLayer();
+                        var pageNumber = service.utils.urlParam("pageNumber");
+                        pageNumber = pageNumber ? pageNumber : 1;
+                        var pageInput = {
+                              pageName: "posts"
+                        }
+                        service.utils.generatePage(pageInput, function (err, page) {
+
+                              $("#nav").html(page);
+                        });
+                        service.dataAccess.getPosts(pageNumber, noOfRecords, function (err, result) {
+                              if (err = " ") {
+                                    var list = "";
+                                    $.each(result.data, function (index, record) {
+                                          list += compiledTemplate(record);
+                                    })
+
+                                    $("#post").html(list)
+                              }
+                              var pagination = service.utils.generatePagination("/posts/listPosts.html?", result.totalRecords, pageNumber, recordsPerPage);
+                              $("#page").html(pagination.content);
+
+                              $(".btnView").click(function (event) {
+                                    event.preventDefault();
+                                    var key = $(this).attr("data-key");
+                                    $(window).attr('location', '/posts/viewPost.html?id=' + key);
+                              })
+                        })
+                  });
+            </script>
+</body>
+
+</html>

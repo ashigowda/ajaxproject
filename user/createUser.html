@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create User</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="nav"></div>
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" href="usersList.html">User Details</a></li>
+                <li class="nav-item"><a class="nav-link " href="userPost.html">Posts</a></li>
+                <li class="nav-item"><a class="nav-link " href="userAlbum.html">Albums</a></li>
+                <li class="nav-item"><a class="nav-link " href="todos.html">Todos</a></li>
+            </ul>
+        </div>
+        <h1 align="center">Create User</h1>
+        <div class="container">
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="is">Id</label>
+                    <input type="number" class="form-control" id="id" placeholder="id" name="id">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name1" placeholder="name" name="name">
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="username">UserName</label>
+                    <input type="text" class="form-control" id="uName" placeholder="userName" name="username">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="email" style="margin-right: 10px;">Email</label>
+                    <input type="email" class="form-control" id="email1" placeholder="" name="email">
+                </div>
+            </div>
+
+
+            <h3 class="card-header">Address</h3>
+            <div class="row">
+                <div class="form-group col-sm-2">
+                    <label for="area">Street</label>
+                    <input type="text" class="form-control" id="street1" maxlength="10" placeholder="" name="street">
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="area">Suite</label>
+                    <input type="text" class="form-control" id="suite" maxlength="10" placeholder="" name="suite">
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="city">city</label>
+                    <input type="text" class="form-control" id="city1" maxlength="50" placeholder="city" name="city">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="zipcode">Zipcode</label>
+                    <input type="text" class="form-control" id="zCode" minlength="6" maxlength="6" placeholder="pinno" name="zipcode">
+                </div>
+            </div>
+            <h3 class="card-header">Geo</h3>
+            <div class="row">
+                <div class="form-group col-sm-2">
+                    <label for="country">lat</label> <input type="text" class="form-control" id="lat" maxlength="50" placeholder="lat"
+                        name="lat"><br>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label for="country">lng</label> <input type="text" class="form-control" id="lng" maxlength="50" placeholder="lng"
+                        name="lng">
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="form-group col-sm-4">
+                    <label for="phone">Phone</label>
+                    <input type="text" class="form-control" id="phone1" placeholder="98442341242" name="phone">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="web">Website</label>
+                    <input type="text" class="form-control" id="webSite" placeholder="website" name="website">
+                </div>
+            </div>
+
+
+            <h3 class="card-header">Company</h3>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <label for="address">Name</label>
+                    <input type="text" class="form-control" id="cName1" maxlength="50" placeholder="name" name="name">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="catchPhrase">CatchPhrase</label>
+                    <input type="text" class="form-control" id="catch" maxlength="10" placeholder="catchphrase" name="catchphrase">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="bs">bs</label>
+                    <input type="text" class="form-control" id="bs" maxlength="10" placeholder="bs" name="bs">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group" style="margin-left:9cm;padding:10px">
+                    <button type="button" value="submit" class="btn btn-info btn-create">Submit</button>
+                    <button type="button" class="btn btn-info" onclick="window.location.href='users.html'">Back</button>
+                </div>
+            </div>
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+                crossorigin="anonymous"></script>
+            <script src="/js/ajaxLibrary.js"></script>
+            <script src="/js/dataAccess.js"></script>
+            <script src="/js/utilLibrary.js"></script>
+            <script src="/js/serviceLayer.js"></script>
+            <script src="/js/test.js"></script>
+            <script>
+                $(document).ready(function () {
+                    var service = new serviceLayer();
+                    pageInput = {
+                        pageName: "users"
+                    }
+                    service.utils.generatePage(pageInput, function (err, page) {
+                        $("#nav").html(page);
+                    })
+
+                    $(".btn-create").click(function (event) {
+                        var createData = {
+                            id: $("#id").val(),
+                            name: $("#name1").val(),
+                            username: $("#uName").val(),
+                            email: $("#email1").val(),
+                            address: {
+                                street: $("#street1").val(),
+                                suite: $("#suite").val(),
+                                city: $("#city1").val(),
+                                zipcode: $("#zCode").val(),
+                                geo: {
+                                    lat: $("#lat").val(),
+                                    lng: $("#lng").val()
+                                }
+                            },
+                            phone: $("#phone1").val(),
+                            website: $("#webSite").val(),
+                            company: {
+                                name: $("#cName1").val(),
+                                catchPhrase: $("#catch").val(),
+                                bs: $("#bs").val(),
+                            }
+                        }
+                        service.dataAccess.createUser(createData, function (err, result) {
+                             $(window).attr('location', '/user/usersList.html');
+                        })
+                    })
+
+                })
+            </script>
+</body>
+
+</html>
